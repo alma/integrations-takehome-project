@@ -10,6 +10,7 @@ Cette évaluation se fera sur :
 - la qualité du code (style cohérent, simplicité, bonnes pratiques, ...)
 - la qualité de la UI et UX de ton rendu
 - le respect des consignes de l'exercice
+- nos discussions lors du debrief technique sur ta solution
 
 Il n'y a pas de contrainte de temps, mais l'exercice se veut toutefois réalisable en quelques heures de 
 travail.
@@ -28,8 +29,8 @@ nécessaires à cet exercice ; son utilisation est détaillée un peu plus bas.
 ### Rendu
 
 Code ta solution dans un dépôt Git séparé, auquel tu pourras nous donner accès sur la plateforme de ton choix.
-Un fichier README doit être présent et contenir les instructions qui nous permettront d'exécuter ta solution 
-localement.
+Un fichier README doit être présent et contenir les instructions qui nous permettront d'installer les 
+dépendances de ta solution et de l'exécuter localement.
 
 ### Contraintes techniques
 

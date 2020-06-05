@@ -1,7 +1,6 @@
 FROM python:3.7
 
 COPY ./src /usr/src/app
-COPY ./README.md /usr/src/app/README.md
 
 WORKDIR /usr/src/app
 RUN pip install -r requirements.txt
