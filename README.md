@@ -107,6 +107,13 @@ N'hésite pas à l'utiliser !
 - L'API Alma sera alors accessible localement sur https://0.0.0.0:5000 après que Docker aura assemblé l'image
   du container
   
+Si pour une raison ou une autre, tu as besoin d'utiliser un autre port que le port 5000 sur ta machine, passe
+le port à utiliser au script via la variable d'environnement `PORT`. Par exemple pour le port 8080 :
+
+```shell script
+PORT=8080 ./serve.sh
+``` 
+  
 ### Endpoints disponibles
 
 #### `POST /payments/eligibility`
