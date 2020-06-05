@@ -115,3 +115,11 @@ def create_payment():
     PAYMENTS[str(payment.id)] = payment
 
     return jsonify(payment.to_dict())
+
+
+@app.route("/payments/<payment_id>", methods=["GET"])
+def get_payment(payment_id):
+    if payment_id not in PAYMENTS:
+        raise NotFoundError()
+
+    return jsonify(PAYMENTS[payment_id].to_dict())

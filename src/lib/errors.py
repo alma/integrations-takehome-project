@@ -21,3 +21,7 @@ class ValidationError(Exception):
         )
         response.status_code = 400
         return response
+
+
+class NotFoundError(Exception):
+    pass
