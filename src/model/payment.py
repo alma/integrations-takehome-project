@@ -5,6 +5,8 @@ from os import environ
 from typing import List
 
 # Mock fee plans and eligibility amount constraints
+from urllib.parse import urlsplit, urlunsplit
+
 import pytz
 from dateutil.relativedelta import relativedelta
 
@@ -118,6 +120,26 @@ class Payment(Model):
         self.installments = Payment.compute_installments(
             self.purchase_amount, self.installments_count
         )
+
+    @property
+    def redirect_url(self):
+        url_parts = list(urlsplit(self.return_url))
+
+        pid_arg = f"pid={self.id}"
+
+        if url_parts[3]:
+            if url_parts[3][-1] == "&":
+                url_parts[3] += pid_arg
+            else:
+                url_parts[3] += f"&{pid_arg}"
+        else:
+            url_parts[3] = pid_arg
+
+        return urlunsplit(url_parts)
+
+    @property
+    def total_due(self):
+        return self.purchase_amount + PLANS[self.installments_count]["fees"]
 
     def to_dict(self) -> dict:
         return {

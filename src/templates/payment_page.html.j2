@@ -1,0 +1,72 @@
+<html>
+<head>
+    <title>Paiement en {{ payment.installments_count }} fois</title>
+</head>
+<body>
+
+<h1>Paiement en {{ payment.installments_count }} fois</h1>
+
+<section>
+    <h2>Informations personnelles</h2>
+
+    <div class="field">
+        <div class="name">Prénom</div>
+        <div class="value">{{ payment.customer.first_name }}</div>
+    </div>
+    <div class="field">
+        <div class="name">Nom</div>
+        <div class="value">{{ payment.customer.last_name }}</div>
+    </div>
+    <div class="field">
+        <div class="name">Email</div>
+        <div class="value">{{ payment.customer.email }}</div>
+    </div>
+    <div class="field">
+        <div class="name">Téléphone</div>
+        <div class="value">{{ payment.customer.phone }}</div>
+    </div>
+    <div class="field">
+        <div class="name">Adresse de livraison</div>
+        <div class="value">{{ payment.shipping_address.line1 }}, {{ payment.shipping_address.postal_code }} {{ payment.shipping_address.city }}</div>
+    </div>
+</section>
+
+<section>
+    <h2>Échéanciers</h2>
+
+    <ul class="installments">
+        {% for installment in payment.installments %}
+            <li class="installment">
+                <div class="installment--date">{{ installment.due_date | humanized_date }}</div>
+                <div class="installment--amount">{{ installment.net_amount | euros }}</div>
+                {% if installment.customer_fee > 0 %}
+                    <div class="installment--fee">{{ installment.customer_fee | euros }}</div>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+
+    <div class="installments--totals">
+        {{ payment.total_due | euros }}
+    </div>
+</section>
+
+<section>
+    <h2>Règlement par carte bancaire</h2>
+
+    <form action="/pp/{{ payment.id }}/pay" method="post">
+        <p>
+            <input type="text" class="card--number" value="4242 4242 4242 4242">
+        </p>
+
+        <p>
+            <input type="text" class="card--expiry" value="04 / 24">
+            <input type="text" class="card--cvc" value="242">
+        </p>
+
+        <button>Payer</button>
+    </form>
+</section>
+
+</body>
+</html>

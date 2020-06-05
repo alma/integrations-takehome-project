@@ -1,10 +1,12 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, render_template, redirect
 
 from .lib.errors import ValidationError, ErrorCode, NotFoundError
+from .lib.jinja import configure_jinja_env
 from .model.customer import Customer
-from .model.payment import Payment
+from .model.payment import Payment, PaymentState
 
 app = Flask(__name__)
+configure_jinja_env(app.jinja_env)
 
 # No DB required... just store payments in memory
 PAYMENTS = {}
@@ -123,3 +125,24 @@ def get_payment(payment_id):
         raise NotFoundError()
 
     return jsonify(PAYMENTS[payment_id].to_dict())
+
+
+@app.route("/pp/<payment_id>", methods=["GET"])
+def payment_page(payment_id):
+    if payment_id not in PAYMENTS:
+        raise NotFoundError()
+
+    return render_template("payment_page.html.j2", payment=PAYMENTS[payment_id])
+
+
+@app.route("/pp/<payment_id>/pay", methods=["POST"])
+def charge_payment(payment_id):
+    if payment_id not in PAYMENTS:
+        raise NotFoundError()
+
+    # We don't care about the actual card data that may be passed in.
+    # Just mark the payment as being started, and redirect to the return url
+    payment = PAYMENTS[payment_id]
+    payment.state = PaymentState.IN_PROGRESS
+
+    return redirect(payment.redirect_url)
