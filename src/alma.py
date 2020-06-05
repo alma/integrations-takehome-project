@@ -1,9 +1,13 @@
 from flask import Flask, request, jsonify
 
-from .errors import ValidationError, ErrorCode
-from .payment import Payment
+from .lib.errors import ValidationError, ErrorCode, NotFoundError
+from .model.customer import Customer
+from .model.payment import Payment
 
 app = Flask(__name__)
+
+# No DB required... just store payments in memory
+PAYMENTS = {}
 
 
 @app.errorhandler(ValidationError)
@@ -11,9 +15,12 @@ def handle_validation_error(e):
     return e.http_response
 
 
+@app.errorhandler(NotFoundError)
 @app.errorhandler(404)
 def handle_404(e):
-    return jsonify(error={"code": ErrorCode.NOT_FOUND.value})
+    resp = jsonify(error={"code": ErrorCode.NOT_FOUND.value})
+    resp.status_code = 404
+    return resp
 
 
 @app.after_request
@@ -88,3 +95,23 @@ def check_eligibility():
         response.append(eligibility)
 
     return jsonify(response)
+
+
+@app.route("/payments", methods=["POST"])
+def create_payment():
+    data = request.get_json(force=True)
+
+    if "payment" not in data:
+        raise ValidationError("payment", ErrorCode.MISSING_FIELD)
+
+    payment = Payment(data["payment"])
+
+    if "customer" not in data:
+        raise ValidationError("customer", ErrorCode.MISSING_FIELD)
+
+    payment.customer = Customer(data["customer"])
+
+    # Store newly created payment in memory
+    PAYMENTS[str(payment.id)] = payment
+
+    return jsonify(payment.to_dict())

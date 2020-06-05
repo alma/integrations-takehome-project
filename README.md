@@ -219,6 +219,7 @@ Si le paiement a bien été créé, sa représentation JSON est renvoyée avec u
   "purchase_amount": 12000,                                 // Montant du paiement
   "installments_count": 3,                                  // Nombre d'échéances
   "return_url": "https://myshop.com/alma/confirm-order",     // URL de renvoi post-paiement
+  "state": "not_started",                                   // État du paiement (voir ci après)
   
   "installments": [
       {
@@ -253,12 +254,15 @@ Si le paiement a bien été créé, sa représentation JSON est renvoyée avec u
 }
 ````
 
-Trois valeurs sont particulièrement importantes dans le cadre de cet exercice :
+Quatre valeurs sont particulièrement importantes dans le cadre de cet exercice :
 
 - `id` permet d'associer le paiement Alma au panier du client de ton côté.
 - `url` te donne l'URL vers laquelle rediriger le client lorsqu'il clique sur "Commander". 
 - `return_url` est l'URL vers laquelle ton client sera renvoyé lorsqu'il aura payé avec Alma – c'est sur cette
   URL que tu dois déterminer s'il faut valider ou non la commande.
+- `state` représente l'état dans lequel se trouve le paiement. Dans cette version simplifiée de l'API, seuls 
+  deux états sont implémentés : `not_started` indique que le paiement _n'a pas été payé_, tandis que 
+  `in_progress` indique que le paiement de la première échéance a bien eu lieu.
 
 
 ### Erreurs
