@@ -213,8 +213,8 @@ Si le paiement a bien été créé, sa représentation JSON est renvoyée avec u
 
 ````javascript
 {
-  "id": "47bd43628d3f4a78ab1e76f52f288f3c",                        // ID unique du paiement
-  "url": "http://127.0.0.1:5000/47bd43628d3f4a78ab1e76f52f288f3c", // URL de la page de paiement vers laquelle rediriger le client
+  "id": "47bd43628d3f4a78ab1e76f52f288f3c",                           // ID unique du paiement
+  "url": "http://127.0.0.1:5000/pp/47bd43628d3f4a78ab1e76f52f288f3c", // URL de la page de paiement vers laquelle rediriger le client
 
   "purchase_amount": 12000,                                 // Montant du paiement
   "installments_count": 3,                                  // Nombre d'échéances
@@ -264,8 +264,17 @@ Quatre valeurs sont particulièrement importantes dans le cadre de cet exercice 
   deux états sont implémentés : `not_started` indique que le paiement _n'a pas été payé_, tandis que 
   `in_progress` indique que le paiement de la première échéance a bien eu lieu.
 
+---
 
-### Erreurs
+#### `GET /payments/<payment_id>`
+
+S'il existe, renvoie le paiement correspondant à l'id demandé.
+
+La réponse est le même objet JSON que celui renvoyé lors de la création du paiement ; si l'appel à ce endpoint
+est fait _après_ le paiement par le client, alors la valeur de `state` aura changé de `not_started` vers
+`in_progress`.
+
+#### Erreurs
 
 Cette API n'a pas été conçue de façon aussi robuste qu'une API de production : certains cas d'erreurs 
 renverront potentiellement du HTML.
