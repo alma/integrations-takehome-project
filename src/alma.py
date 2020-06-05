@@ -112,7 +112,7 @@ def create_payment():
     payment.customer = Customer(data["customer"])
 
     # Store newly created payment in memory
-    PAYMENTS[str(payment.id)] = payment
+    PAYMENTS[payment.id] = payment
 
     return jsonify(payment.to_dict())
 

@@ -23,7 +23,7 @@ class Model:
 
             self.__setattr__(field, value)
 
-        self.id = uuid4()
+        self.id = uuid4().hex
 
     def to_dict(self):
         return {
