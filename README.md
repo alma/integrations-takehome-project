@@ -120,7 +120,7 @@ requête :
 {
   "payment": {
     "purchase_amount": 12000,     // Montant de l'achat, en centimes
-    "installments_count": [3, 4]  // Nombres d'échéances à évaluer
+    "installments_counts": [3, 4]  // Nombres d'échéances à évaluer
   }
 }
 ```
@@ -140,17 +140,17 @@ montant est trop faible (inférieur à 150€) :
     "installments": [             // Échéancier applicable
       {
         "due_date": 1591362744,   // Date de prélèvement de la première échéance
-        "amount": 4000,           // Montant "net" de la première échéance (en centimes)
+        "net_amount": 4000,       // Montant "net" de la première échéance (en centimes)
         "customer_fee": 180       // Montant des frais prélevés en sus du principal (en centimes)
       },   
       {
         "due_date": 1591362744,   // Date de prélèvement de la seconde échéance
-        "amount": 4000,           // Montant "net" de la seconde échéance (en centimes)
+        "net_amount": 4000,       // Montant "net" de la seconde échéance (en centimes)
         "customer_fee": 0         // Montant des frais prélevés en sus du principal (en centimes)
       },   
       {
         "due_date": 1591362744,   // Date de prélèvement de la troisième échéance
-        "amount": 4000,           // Montant "net" de la troisième échéance (en centimes)
+        "net_amount": 4000,       // Montant "net" de la troisième échéance (en centimes)
         "customer_fee": 0         // Montant des frais prélevés en sus du principal (en centimes)
       }   
     ]
@@ -202,17 +202,6 @@ Pour le créer, il faut fournir un certain nombre d'informations, en JSON dans l
 }
 ```
 
-En cas d'erreur, la réponse sera une erreur 400 avec des informations en JSON :
-
-```javascript
-{
-  "error": {
-    "field": "customer.first_name",
-    "code": "missing_field"
-  }
-}
-```
-
 Si le paiement a bien été créé, sa représentation JSON est renvoyée avec un code 200 :
 
 ````javascript
@@ -227,17 +216,17 @@ Si le paiement a bien été créé, sa représentation JSON est renvoyée avec u
   "installments": [
       {
         "due_date": 1591362744,   // Date de prélèvement de la première échéance
-        "amount": 4000,           // Montant "net" de la première échéance (en centimes)
+        "net_amount": 4000,       // Montant "net" de la première échéance (en centimes)
         "customer_fee": 180       // Montant des frais prélevés en sus du principal (en centimes)
       },
       {
         "due_date": 1591362744,   // Date de prélèvement de la seconde échéance
-        "amount": 4000,           // Montant "net" de la seconde échéance (en centimes)
+        "net_amount": 4000,       // Montant "net" de la seconde échéance (en centimes)
         "customer_fee": 0         // Montant des frais prélevés en sus du principal (en centimes)
       },
       {
         "due_date": 1591362744,   // Date de prélèvement de la troisième échéance
-        "amount": 4000,           // Montant "net" de la troisième échéance (en centimes)
+        "net_amount": 4000,       // Montant "net" de la troisième échéance (en centimes)
         "customer_fee": 0         // Montant des frais prélevés en sus du principal (en centimes)
       }
   ],
@@ -263,6 +252,31 @@ Trois valeurs sont particulièrement importantes dans le cadre de cet exercice :
 - `url` te donne l'URL vers laquelle rediriger le client lorsqu'il clique sur "Commander". 
 - `return_url` est l'URL vers laquelle ton client sera renvoyé lorsqu'il aura payé avec Alma – c'est sur cette
   URL que tu dois déterminer s'il faut valider ou non la commande.
+
+
+### Erreurs
+
+Cette API n'a pas été conçue de façon aussi robuste qu'une API de production : certains cas d'erreurs 
+renverront potentiellement du HTML.
+
+En cas d'erreur lors de l'appel à l'un des endpoints, la réponse sera une erreur 400 avec des informations en
+JSON :
+
+```javascript
+{
+  "error": {
+    "field": "customer.first_name",
+    "code": "missing_field"
+  }
+}
+```
+
+Le champ `field` est optionnel. Les trois codes d'erreur possibles sont :
+- `missing_field` : une information manque dans la donnée envoyée. `field` indique alors le champ manquant.
+- `invalid_value` : la valeur du champ indiqué par `field` n'est pas valide : ça peut être un problème de type
+  de donnée comme un problème de valeur interdite
+- `not_found` : la ressource demandée n'a pas été trouvée
+
 
 ## Besoin d'aide ?
 
