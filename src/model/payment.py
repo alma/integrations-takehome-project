@@ -77,7 +77,7 @@ class Payment(Model):
         first = purchase_amount - ((installments_count - 1) * after)
         phasing = [first] + [after] * (installments_count - 1)
 
-        fees = PLANS[installments_count]["fees"]
+        fees = round(PLANS[installments_count]["fees"] * purchase_amount / 10000)
 
         # Put all fees on first installment:
         installments = [
@@ -139,7 +139,7 @@ class Payment(Model):
 
     @property
     def total_due(self):
-        return self.purchase_amount + PLANS[self.installments_count]["fees"]
+        return self.purchase_amount + self.installments[0]["customer_fee"]
 
     def to_dict(self) -> dict:
         return {
