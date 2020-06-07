@@ -30,6 +30,10 @@ def add_cors_headers(response):
     # To make things simple, always allow any origin to call this API
     response.headers["Access-Control-Allow-Origin"] = request.headers.get("Origin")
     response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers[
+        "Access-Control-Allow-Headers"
+    ] = "Authorization, Content-Type, Accept"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST"
 
     return response
 
