@@ -113,7 +113,24 @@ le port à utiliser au script via la variable d'environnement `PORT`. Par exempl
 ```shell script
 PORT=8080 ./serve.sh
 ``` 
-  
+
+### Communication avec l'API
+
+Pour accéder à l'API fournie avec l'exercice, il y a deux possibilités.
+
+#### En local
+La plus simple, si ton projet tourne directement sur ta machine, alors serve.sh met à disposition l'API sur le port 5000 ; tu as juste à communiquer avec http://localhost:5000 comme indiqué ci-dessus.
+
+#### Entre containers
+Si tu fais tourner ton propre projet dans Docker, il s'agit alors de permettre la communication entre les deux containers.
+
+Le script serve.sh crée un réseau `exo-alma` et le container de l'API est lancé "dans" ce réseau, avec le nom `alma`.
+Il te suffit donc de lancer ton propre container avec `--network exo-alma`, pour qu'il rejoigne le même réseau. Si ton container est déjà lancé (ainsi que `serve.sh`) tu peux aussi utiliser `docker network connect exo-alma <container name>`.
+
+Une fois cela fait tu peux accéder à l'API à la fois via http://localhost:5000 depuis ton navigateur (utile pour du JS éventuellement), et depuis PHP dans ton container Docker via http://alma:5000.
+
+Tu peux également atteindre le même résultat en utilisant Docker Compose et en faisant tourner ton projet et l'API comme deux services d'un même `docker-compose.yml`.
+
 ### Endpoints disponibles
 
 #### `POST /payments/eligibility`
